@@ -1,6 +1,7 @@
-import  { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { logValue } from '../api';
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { logValue } from "../api";
+import { logout } from "../../../server/utils/authUtils";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -10,18 +11,21 @@ const Home = () => {
 
   const increment = () => setValue(value + 1);
   const decrement = () => setValue(value - 1);
-
+  const handleLogout = () => {
+    logout();
+    navigate("/login"); // Redirect to the login page after logging out
+  };
   const handleLog = async () => {
     try {
       await logValue({ email, value });
-      console.log('Value logged successfully');
+      console.log("Value logged successfully");
     } catch (error) {
-      console.error('Error logging value:', error);
+      console.error("Error logging value:", error);
     }
   };
 
   const goToPerformance = () => {
-    navigate('/performance', { state: { email } });
+    navigate("/performance", { state: { email } });
   };
 
   return (
@@ -33,6 +37,8 @@ const Home = () => {
       <button onClick={decrement}>Decrement</button>
       <button onClick={handleLog}>Log</button>
       <button onClick={goToPerformance}>Performance</button>
+
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
